@@ -5,22 +5,22 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static scripts.Utils.*;
+import static scripts.Utils.println;
 
 class Columns {
 
     public static void print(List<String> headerNames, Stream<List<Object>> dataStream) {
-        var headers = headerNames.stream().map(text -> new HeaderDescription(text)).collect(Collectors.toList());
+        var headers = headerNames.stream().map(HeaderDescription::new).collect(Collectors.toList());
         final int columnCount = headers.size();
         var data = dataStream
-            .map(row -> row.stream().map(v -> v == null ? "-" : v.toString()).collect(Collectors.toList()))
-            .collect(Collectors.toList());
+                .map(row -> row.stream().map(v -> v == null ? "-" : v.toString()).toList())
+                .toList();
         if (!data.stream().allMatch(row -> row.size() == columnCount)) {
             throw new IllegalArgumentException("data dimensions");
         }
         for (int i = 0; i < columnCount; ++i) {
-            for (int j = 0; j < data.size(); ++j) {
-                headers.get(i).updateMaxLength(data.get(j).get(i).length());
+            for (List<String> datum : data) {
+                headers.get(i).updateMaxLength(datum.get(i).length());
             }
         }
         printRow(headers, headers.stream().map(h -> h.text).collect(Collectors.toList()));
@@ -30,7 +30,7 @@ class Columns {
     private static void printRow(List<HeaderDescription> headers, List<String> row) {
         assert headers.size() == row.size();
         var line = IntStream.range(0, headers.size()).mapToObj(i -> headers.get(i).render(row.get(i)))
-            .collect(Collectors.joining("  "));
+                .collect(Collectors.joining("  "));
         println(line);
     }
 
@@ -65,9 +65,7 @@ class Columns {
         }
 
         private static void pad(StringBuilder sb, int num) {
-            for (int i = 0; i < num; ++i) {
-                sb.append(' ');
-            }
+            sb.append(" ".repeat(num));
         }
     }
 }
