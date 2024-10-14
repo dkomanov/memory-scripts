@@ -1,9 +1,9 @@
 package scripts;
 
-import static scripts.Utils.*;
+import static scripts.Utils.printMemoryPools;
 
 public class PrintMemoryPools {
     public static void main(String[] args) {
-        sortedMemoryPools().forEach(mp -> println(mp.getName()));
+        printMemoryPools(mp -> true, mp -> mp.getUsage().getUsed());
     }
 }
