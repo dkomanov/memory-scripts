@@ -3,7 +3,6 @@ package scripts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static scripts.Utils.*;
 
@@ -13,29 +12,29 @@ public class Allocate {
         var smallRefs = new ArrayList<>(20);
         var bigRefs = new ArrayList<>(20);
 
-        var p = new DiffPrinter();
+        var p = new DiffPrinter(1000, 2000);
 
         warmup(p);
 
         printAllHeapMemoryPools();
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
+            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
         }
 
-        executeAndPrintHeap(p, "clear small refs", () -> resetArrayList(smallRefs));
+        p.executeAndPrint("clear small refs", () -> resetArrayList(smallRefs));
         gcAndPrint(p);
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
-            bigRefs.add(executeAndPrintHeap(p, i + ": new Integer[500000]", () -> allocateIntegerArray(500000)));
+            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
+            bigRefs.add(p.executeAndPrint(i + ": new Integer[500000]", () -> allocateIntegerArray(500000)));
         }
 
-        executeAndPrintHeap(p, "clear small refs", () -> resetArrayList(smallRefs));
+        p.executeAndPrint("clear small refs", () -> resetArrayList(smallRefs));
         gcAndPrint(p);
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
+            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
         }
 
         useUnused(smallRefs);
@@ -71,14 +70,5 @@ public class Allocate {
         list.replaceAll(ignored -> null);
         list.clear();
         return null;
-    }
-
-    private static <T> T executeAndPrintHeap(DiffPrinter p, String title, Supplier<T> action) {
-        println(title);
-        var r = action.get();
-        sleep(1000);
-        p.print();
-        sleep(2000);
-        return r;
     }
 }

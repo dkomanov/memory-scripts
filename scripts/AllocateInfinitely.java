@@ -1,7 +1,6 @@
 package scripts;
 
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
 import static scripts.Utils.*;
 
@@ -10,15 +9,16 @@ public class AllocateInfinitely {
     public static void main(String[] args) {
         var refs = new ArrayList<>(100);
 
-        var p = new DiffPrinter();
+        var p = new DiffPrinter(200, 1000);
 
         var allocationCount = 0;
         var oomCounter = 0;
+        //noinspection InfiniteLoopStatement
         while (true) {
             ++allocationCount;
             useUnused(refs);
             try {
-                refs.add(executeAndPrintHeap(p, allocationCount + ": new Integer[500000]", () -> allocateIntegerArray(500_000)));
+                refs.add(p.executeAndPrint(allocationCount + ": new Integer[500000]", () -> allocateIntegerArray(500_000)));
             }
             catch (OutOfMemoryError oom) {
                 var toRemove = oomCounter % refs.size();
@@ -30,14 +30,5 @@ public class AllocateInfinitely {
                 ++oomCounter;
             }
         }
-    }
-
-    private static <T> T executeAndPrintHeap(DiffPrinter p, String title, Supplier<T> action) {
-        println(title);
-        var r = action.get();
-        sleep(200);
-        p.print();
-        sleep(1000);
-        return r;
     }
 }

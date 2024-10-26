@@ -3,11 +3,20 @@ package scripts;
 import java.lang.management.MemoryPoolMXBean;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static scripts.Utils.*;
 
 final class DiffPrinter {
+    private final long beforeDelayMillis;
+    private final long afterDelayMillis;
+
+    public DiffPrinter(long beforeDelayMillis, long afterDelayMillis) {
+        this.beforeDelayMillis = beforeDelayMillis;
+        this.afterDelayMillis = afterDelayMillis;
+    }
+
     private static Map<String, Long> snapshot() {
         return sortedMemoryPools()
                 .stream()
@@ -30,5 +39,14 @@ final class DiffPrinter {
                 .collect(Collectors.joining(", "));
         prev = curr;
         println(">> %s".formatted(line));
+    }
+
+    public <T> T executeAndPrint(String title, Supplier<T> action) {
+        println(title);
+        var r = action.get();
+        sleep(beforeDelayMillis);
+        print();
+        sleep(afterDelayMillis);
+        return r;
     }
 }
