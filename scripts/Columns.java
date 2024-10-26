@@ -29,7 +29,9 @@ class Columns {
 
     private static void printRow(List<HeaderDescription> headers, List<String> row) {
         assert headers.size() == row.size();
-        var line = IntStream.range(0, headers.size()).mapToObj(i -> headers.get(i).render(row.get(i)))
+        var line = IntStream
+                .range(0, headers.size())
+                .mapToObj(i -> headers.get(i).render(row.get(i)))
                 .collect(Collectors.joining("  "));
         println(line);
     }
@@ -42,7 +44,7 @@ class Columns {
         public HeaderDescription(String text) {
             this.right = text.endsWith("*");
             this.text = this.right ? text.substring(0, text.length() - 1) : text;
-            this.maxLength = this.text.length();
+            this.maxLength = Math.max(12, this.text.length());
         }
 
         public void updateMaxLength(int value) {
