@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import static scripts.Utils.*;
 
+// javac -d out scripts/*.java && java -cp out -Xmx128M -Xms128M -XX:+AlwaysPreTouch -Xlog:gc -XX:+UseG1GC scripts.Allocate
 public class Allocate {
     public static void main(String[] args) {
         var smallRefs = new ArrayList<>(20);
