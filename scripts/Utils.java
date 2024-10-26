@@ -137,4 +137,17 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
+
+    public static Integer[] allocateIntegerArray(int count) {
+        var array = new Integer[count];
+        for (int i = 0; i < count; ++i) {
+            array[i] = Integer.valueOf(1000 + i);
+        }
+        return array;
+    }
+
+    // allocates _at most_ `count` bytes (could be at most 12 bytes less).
+    public static Integer[] allocateIntegerArrayInBytes(long count) {
+        return allocateIntegerArray((int) count / 20);
+    }
 }

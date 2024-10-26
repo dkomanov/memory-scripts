@@ -20,39 +20,26 @@ public class Allocate {
         printAllHeapMemoryPools();
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocate(10000)));
+            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
         }
 
         executeAndPrintHeap(p, "clear small refs", () -> resetArrayList(smallRefs));
         gcAndPrint(p);
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocate(10000)));
-            bigRefs.add(executeAndPrintHeap(p, i + ": new Integer[500000]", () -> allocate(500000)));
+            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
+            bigRefs.add(executeAndPrintHeap(p, i + ": new Integer[500000]", () -> allocateIntegerArray(500000)));
         }
 
         executeAndPrintHeap(p, "clear small refs", () -> resetArrayList(smallRefs));
         gcAndPrint(p);
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocate(10000)));
+            smallRefs.add(executeAndPrintHeap(p, i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
         }
 
         useUnused(smallRefs);
         useUnused(bigRefs);
-    }
-
-    private static Integer[] allocate(int count) {
-        var array = new Integer[count];
-        for (int i = 0; i < count; ++i) {
-            array[i] = Integer.valueOf(1000 + i);
-        }
-        return array;
-    }
-
-    // allocates _at most_ `count` bytes (could be at most 12 bytes less).
-    private static Integer[] allocateBytes(long count) {
-        return allocate((int) count / 20);
     }
 
     private static void gcAndPrint(DiffPrinter p) {
@@ -73,7 +60,7 @@ public class Allocate {
     private static void warmup(DiffPrinter p) {
         println("warmup (execute all actions and then GC)");
         printAllHeapMemoryPools();
-        useUnused(allocate(10000));
+        useUnused(allocateIntegerArray(10000));
         p.print();
         gcAndPrint(p);
         println("warmup completed\n\n\n");
