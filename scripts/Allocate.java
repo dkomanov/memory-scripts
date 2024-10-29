@@ -19,22 +19,22 @@ public class Allocate {
         printAllHeapMemoryPools();
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
+            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10_000)));
         }
 
         p.executeAndPrint("clear small refs", () -> resetArrayList(smallRefs));
         gcAndPrint(p);
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
-            bigRefs.add(p.executeAndPrint(i + ": new Integer[500000]", () -> allocateIntegerArray(500000)));
+            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10_000)));
+            bigRefs.add(p.executeAndPrint(i + ": new Integer[500000]", () -> allocateIntegerArray(500_000)));
         }
 
         p.executeAndPrint("clear small refs", () -> resetArrayList(smallRefs));
         gcAndPrint(p);
 
         for (int i = 0; i < 5; ++i) {
-            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10000)));
+            smallRefs.add(p.executeAndPrint(i + ": new Integer[ 10000]", () -> allocateIntegerArray(10_000)));
         }
 
         useUnused(smallRefs);
