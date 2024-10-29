@@ -141,6 +141,7 @@ public class Utils {
     public static Integer[] allocateIntegerArray(int count) {
         var array = new Integer[count];
         for (int i = 0; i < count; ++i) {
+            // -128..127 are cached, therefore +1000.
             array[i] = Integer.valueOf(1000 + i);
         }
         return array;
